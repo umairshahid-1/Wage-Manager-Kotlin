@@ -1,5 +1,6 @@
-package com.example.wage_manager.ui.main
+package com.example.wage_manager.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,7 +10,6 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.wage_manager.ui.navigation.Screen
 
 data class Employee(
     val name: String,
@@ -30,15 +29,12 @@ data class Employee(
 
 @Composable
 fun CustomTopBar(
-    onSearchClick: () -> Unit,
-    title: String,
-    onAddClick: () -> Unit
+    onSearchClick: () -> Unit, title: String, onAddClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp),
-        color = MaterialTheme.colorScheme.primary
+            .height(56.dp), color = MaterialTheme.colorScheme.primary
     ) {
         Row(
             modifier = Modifier
@@ -72,9 +68,7 @@ fun CustomTopBar(
 
 @Composable
 fun CustomBottomBar(
-    onChangeClick: () -> Unit,
-    onAddClick: () -> Unit,
-    onExportClick: () -> Unit
+    onChangeClick: () -> Unit, onAddClick: () -> Unit, onExportClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -93,15 +87,13 @@ fun CustomBottomBar(
             ) {
                 IconButton(onClick = onChangeClick) {
                     Icon(
-                        imageVector = Icons.Default.Create,
-                        contentDescription = "Change"
+                        imageVector = Icons.Default.Create, contentDescription = "Change"
                     )
                 }
                 Spacer(Modifier.weight(1f))
                 IconButton(onClick = onExportClick) {
                     Icon(
-                        imageVector = Icons.Default.Done,
-                        contentDescription = "Export/Download"
+                        imageVector = Icons.Default.Done, contentDescription = "Export/Download"
                     )
                 }
             }
@@ -122,27 +114,19 @@ fun MainScreen(navController: NavController) {
     // Dummy data for now
     val employees = listOf(
         Employee("Umair", 2, 500, 250, 250),
-        Employee("Umair", 2, 500, 250, 250),
-        Employee("Umair", 2, 500, 250, 250),
-        Employee("Umair", 2, 500, 250, 250)
+        Employee("Zain", 2, 500, 250, 250)
     )
 
     Scaffold(
         topBar = {
-            CustomTopBar(
-                onSearchClick = {},
-                title = "Wage Manager",
-                onAddClick = {
-                    // Code to change working day price screen
-                }
-            )
+            CustomTopBar(onSearchClick = {}, title = "Wage Manager", onAddClick = {
+                // Code to change working day price screen
+            })
         },
         bottomBar = {
-            CustomBottomBar(
-                onChangeClick = { /* Handle change action */ },
+            CustomBottomBar(onChangeClick = { /* Handle change action */ },
                 onAddClick = { /* Handle add action */ },
-                onExportClick = { /* Handle export action */ }
-            )
+                onExportClick = { /* Handle export action */ })
         },
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
@@ -168,7 +152,11 @@ fun EmployeeList(employees: List<Employee>, navController: NavController) {
 fun EmployeeItem(employee: Employee, navController: NavController) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                // Navigate to employee details screen
+                navController.navigate(Screen.EmployeeDetails.route)
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
@@ -180,7 +168,7 @@ fun EmployeeItem(employee: Employee, navController: NavController) {
         ) {
             Icon(
                 Icons.Default.Person,
-                contentDescription = "Add Pic",
+                contentDescription = "Employee Icon",
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -188,24 +176,17 @@ fun EmployeeItem(employee: Employee, navController: NavController) {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = employee.name, style = MaterialTheme.typography.bodyLarge)
-                Text(text = "${employee.workingDays}")
+                Text(text = "${employee.workingDays} days")
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(text = "${employee.totalSalary} Rs")
                 Text(text = "${employee.remainingAmount} Rs")
             }
         }
-//        // OnClick event for each employee
-//        Button(
-//            onClick = { navController.navigate(Screen.EmployeeDetails.route) },
-//            modifier = Modifier.align(Alignment.CenterHorizontally)
-//        ) {
-//            Text("Details")
-//        }
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun MainScreenPreview() {
     // Use rememberNavController for previews

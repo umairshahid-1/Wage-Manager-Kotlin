@@ -1,4 +1,4 @@
-package com.example.wage_manager.ui.employee
+package com.example.wage_manager.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
